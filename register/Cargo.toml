@@ -1,0 +1,13 @@
+[package]
+name = "register"
+description = "A progam used to register discord commands"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dotenvy = "0.15.7"
+reqwest = { version = "0.12.7", features = ["json"] }
+serde = { version = "1.0.210", features = ["derive"] }
+serde_json = "1.0.128"
+serde_repr = "0.1.19"
+tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }

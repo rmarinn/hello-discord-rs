@@ -1,0 +1,55 @@
+use register::*;
+
+fn make_cmd_blep() -> Command {
+    let choice_dog = CommandOptionChoiceBuilder::new()
+        .name("Dog")
+        .value(OptionValue::String("animal_dog".into()))
+        .build()
+        .unwrap();
+    let choice_cat = CommandOptionChoiceBuilder::new()
+        .name("Cat")
+        .value(OptionValue::String("animal_cat".into()))
+        .build()
+        .unwrap();
+    let choice_penguin = CommandOptionChoiceBuilder::new()
+        .name("Penguin")
+        .value(OptionValue::String("animal_penguin".into()))
+        .build()
+        .unwrap();
+    let animal_opts = CommandOptionBuilder::new()
+        .name("animal")
+        .description("The type of animal")
+        .kind(CommandOptionKind::String)
+        .required(true)
+        .set_choices(vec![choice_dog, choice_cat, choice_penguin])
+        .build()
+        .unwrap();
+    let only_smol = CommandOptionBuilder::new()
+        .name("only_smol")
+        .description("Whether to show only baby animals")
+        .kind(CommandOptionKind::Boolean)
+        .required(true)
+        .build()
+        .unwrap();
+    let options = vec![animal_opts, only_smol];
+
+    let cmd = CommandBuilder::new()
+        .name("blep")
+        .kind(CommandKind::ChatInput)
+        .description("Send a random adorable animal photo")
+        .set_options(options)
+        .build()
+        .unwrap();
+
+    cmd
+}
+
+#[tokio::main]
+async fn main() {
+    let client = Client::new().unwrap();
+
+    let cmd_blep = make_cmd_blep();
+    let cmds = vec![cmd_blep];
+
+    client.register_commands(cmds).await;
+}
