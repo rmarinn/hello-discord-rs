@@ -138,22 +138,40 @@ impl Serialize for CommandOption {
             s.skip_field("options")?;
         }
         if let Some(min_value) = &self.min_value {
-            s.serialize_field("min_value", &min_value)?;
+            match min_value {
+                OptionValue::Int(val) => s.serialize_field("min_value", val)?,
+                OptionValue::Float(val) => s.serialize_field("min_value", val)?,
+                OptionValue::String(_) => {
+                    return Err(S::Error::custom("`min_value` should be `Int` or `Float`"))
+                }
+            }
         } else {
             s.skip_field("min_value")?;
         }
         if let Some(max_value) = &self.max_value {
-            s.serialize_field("max_value", &max_value)?;
+            match max_value {
+                OptionValue::Int(val) => s.serialize_field("max_value", val)?,
+                OptionValue::Float(val) => s.serialize_field("max_value", val)?,
+                OptionValue::String(_) => {
+                    return Err(S::Error::custom("`max_value` should be `Int` or `Float`"))
+                }
+            }
         } else {
             s.skip_field("max_value")?;
         }
         if let Some(min_length) = &self.min_length {
-            s.serialize_field("min_length", &min_length)?;
+            match min_length {
+                OptionValue::Int(val) => s.serialize_field("min_length", val)?,
+                _ => return Err(S::Error::custom("`min_length` should be `Int`")),
+            }
         } else {
             s.skip_field("min_length")?;
         }
         if let Some(max_length) = &self.max_length {
-            s.serialize_field("max_length", &max_length)?;
+            match max_length {
+                OptionValue::Int(val) => s.serialize_field("max_length", val)?,
+                _ => return Err(S::Error::custom("`max_length` should be `Int`")),
+            }
         } else {
             s.skip_field("max_length")?;
         }

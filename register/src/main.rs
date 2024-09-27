@@ -44,12 +44,32 @@ fn make_cmd_blep() -> Command {
     cmd
 }
 
+fn make_cmd_roll() -> Command {
+    let opts = CommandOptionBuilder::new()
+        .name("sides")
+        .description("The number of sides of the die")
+        .kind(CommandOptionKind::Integer)
+        .min_value(OptionValue::Int(1))
+        .max_value(OptionValue::Int(i32::MAX))
+        .build()
+        .unwrap();
+    let cmd = CommandBuilder::new()
+        .name("roll")
+        .kind(CommandKind::ChatInput)
+        .description("Roll a die")
+        .option(opts)
+        .build()
+        .unwrap();
+    cmd
+}
+
 #[tokio::main]
 async fn main() {
     let client = Client::new().unwrap();
 
     let cmd_blep = make_cmd_blep();
-    let cmds = vec![cmd_blep];
+    let cmd_roll = make_cmd_roll();
+    let cmds = vec![cmd_blep, cmd_roll];
 
     client.register_commands(cmds).await;
 }
