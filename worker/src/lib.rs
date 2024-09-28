@@ -1,8 +1,11 @@
 use worker::{event, Context, Env, Request, Response, ResponseBody, ResponseBuilder};
 
 mod parse;
+mod response;
 mod verify;
+
 pub use parse::*;
+pub use response::*;
 pub use verify::*;
 
 #[event(fetch)]
@@ -33,6 +36,9 @@ async fn fetch(mut req: Request, _env: Env, _ctx: Context) -> worker::Result<Res
                 .with_header("content-type", "application/json")?
                 .body(body);
             Ok(resp)
+        } else if kind == 2 {
+            let resp = InteractionResponse::Message(MessageBuilder::new().content("ok").build());
+            Response::from_json(&resp)
         } else {
             Response::error("Interaction not implemented", 501)
         }
