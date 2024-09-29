@@ -6,11 +6,11 @@ pub struct RequestHeaders {
 }
 
 impl RequestHeaders {
-    pub fn signature(&self) -> &String {
+    pub fn signature(&self) -> &str {
         &self.signature
     }
 
-    pub fn timestamp(&self) -> &String {
+    pub fn timestamp(&self) -> &str {
         &self.timestamp
     }
 }

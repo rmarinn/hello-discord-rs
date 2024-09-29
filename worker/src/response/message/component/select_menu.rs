@@ -76,7 +76,7 @@ pub struct SelectMenu {
 }
 
 impl SelectMenu {
-    pub fn custom_id(&self) -> &String {
+    pub fn custom_id(&self) -> &str {
         &self.custom_id
     }
 
