@@ -1,4 +1,4 @@
-use worker::{console_debug, event, Context, Env, Request, Response};
+use worker::{event, Context, Env, Request, Response};
 
 mod commands;
 mod interaction;
