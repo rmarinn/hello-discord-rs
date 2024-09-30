@@ -27,4 +27,4 @@ hex = "0.4.3"
 bitflags = "2.6.0"
 rand = "0.8.5"
 getrandom = { version = "0.2.15", features = ["js"] }
-serde_discord = { path = "../serde_discord/", features = ["responding"] }
+serde_discord = { path = "../../serde_discord/", features = ["responding"] }
