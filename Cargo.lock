@@ -861,6 +861,7 @@ dependencies = [
  "dotenvy",
  "reqwest",
  "serde",
+ "serde_discord",
  "serde_json",
  "serde_repr",
  "tokio",
@@ -1046,16 +1047,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "serde-discord"
-version = "0.1.0"
-dependencies = [
- "bitflags",
- "serde",
- "serde_json",
- "serde_repr",
-]
-
-[[package]]
 name = "serde-wasm-bindgen"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1086,6 +1077,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "serde_discord"
+version = "0.1.0"
+dependencies = [
+ "bitflags",
+ "serde",
+ "serde_json",
+ "serde_repr",
 ]
 
 [[package]]
