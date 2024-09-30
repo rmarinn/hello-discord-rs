@@ -1,8 +1,7 @@
 use std::{env, error::Error};
 
 use reqwest::header::{HeaderMap, HeaderValue, CONTENT_TYPE};
-
-use crate::Command;
+use serde_discord::register::Command;
 
 pub struct Client {
     app_id: String,
