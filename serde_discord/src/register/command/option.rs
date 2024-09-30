@@ -10,12 +10,12 @@ pub struct CommandOption {
     name: String,
     description: String,
     required: Option<bool>,
-    choices: Option<Vec<CommandOptionChoice>>,
+    choices: Option<Vec<Choice>>,
     options: Option<Vec<CommandOption>>,
-    min_value: Option<CommandOptionChoiceValue>,
-    max_value: Option<CommandOptionChoiceValue>,
-    min_length: Option<CommandOptionChoiceValue>,
-    max_length: Option<CommandOptionChoiceValue>,
+    min_value: Option<ChoiceValue>,
+    max_value: Option<ChoiceValue>,
+    min_length: Option<ChoiceValue>,
+    max_length: Option<ChoiceValue>,
     autocomplete: Option<bool>,
 }
 
@@ -46,9 +46,9 @@ impl Serialize for CommandOption {
         }
         if let Some(min_value) = &self.min_value {
             match min_value {
-                CommandOptionChoiceValue::Int(val) => s.serialize_field("min_value", val)?,
-                CommandOptionChoiceValue::Float(val) => s.serialize_field("min_value", val)?,
-                CommandOptionChoiceValue::String(_) => {
+                ChoiceValue::Int(val) => s.serialize_field("min_value", val)?,
+                ChoiceValue::Float(val) => s.serialize_field("min_value", val)?,
+                ChoiceValue::String(_) => {
                     return Err(S::Error::custom("`min_value` should be `Int` or `Float`"))
                 }
             }
@@ -57,9 +57,9 @@ impl Serialize for CommandOption {
         }
         if let Some(max_value) = &self.max_value {
             match max_value {
-                CommandOptionChoiceValue::Int(val) => s.serialize_field("max_value", val)?,
-                CommandOptionChoiceValue::Float(val) => s.serialize_field("max_value", val)?,
-                CommandOptionChoiceValue::String(_) => {
+                ChoiceValue::Int(val) => s.serialize_field("max_value", val)?,
+                ChoiceValue::Float(val) => s.serialize_field("max_value", val)?,
+                ChoiceValue::String(_) => {
                     return Err(S::Error::custom("`max_value` should be `Int` or `Float`"))
                 }
             }
@@ -68,7 +68,7 @@ impl Serialize for CommandOption {
         }
         if let Some(min_length) = &self.min_length {
             match min_length {
-                CommandOptionChoiceValue::Int(val) => s.serialize_field("min_length", val)?,
+                ChoiceValue::Int(val) => s.serialize_field("min_length", val)?,
                 _ => return Err(S::Error::custom("`min_length` should be `Int`")),
             }
         } else {
@@ -76,7 +76,7 @@ impl Serialize for CommandOption {
         }
         if let Some(max_length) = &self.max_length {
             match max_length {
-                CommandOptionChoiceValue::Int(val) => s.serialize_field("max_length", val)?,
+                ChoiceValue::Int(val) => s.serialize_field("max_length", val)?,
                 _ => return Err(S::Error::custom("`max_length` should be `Int`")),
             }
         } else {
@@ -96,12 +96,12 @@ pub struct CommandOptionBuilder {
     name: Option<String>,
     description: Option<String>,
     required: Option<bool>,
-    choices: Option<Vec<CommandOptionChoice>>,
+    choices: Option<Vec<Choice>>,
     options: Option<Vec<CommandOption>>,
-    min_value: Option<CommandOptionChoiceValue>,
-    max_value: Option<CommandOptionChoiceValue>,
-    min_length: Option<CommandOptionChoiceValue>,
-    max_length: Option<CommandOptionChoiceValue>,
+    min_value: Option<ChoiceValue>,
+    max_value: Option<ChoiceValue>,
+    min_length: Option<ChoiceValue>,
+    max_length: Option<ChoiceValue>,
     autocomplete: Option<bool>,
 }
 
@@ -148,7 +148,7 @@ impl CommandOptionBuilder {
     }
 
     /// Adds a choice to the command option.
-    pub fn choice(mut self, choice: CommandOptionChoice) -> Self {
+    pub fn choice(mut self, choice: Choice) -> Self {
         if let Some(choices) = &mut self.choices {
             choices.push(choice);
         } else {
@@ -158,7 +158,7 @@ impl CommandOptionBuilder {
     }
 
     /// Sets multiple choices for the command option.
-    pub fn choices(mut self, choices: Vec<CommandOptionChoice>) -> Self {
+    pub fn choices(mut self, choices: Vec<Choice>) -> Self {
         self.choices = Some(choices);
         self
     }
@@ -180,25 +180,25 @@ impl CommandOptionBuilder {
     }
 
     /// Sets the minimum value for the command option.
-    pub fn min_value(mut self, min_value: CommandOptionChoiceValue) -> Self {
+    pub fn min_value(mut self, min_value: ChoiceValue) -> Self {
         self.min_value = Some(min_value);
         self
     }
 
     /// Sets the maximum value for the command option.
-    pub fn max_value(mut self, max_value: CommandOptionChoiceValue) -> Self {
+    pub fn max_value(mut self, max_value: ChoiceValue) -> Self {
         self.max_value = Some(max_value);
         self
     }
 
     /// Sets the minimum length for the command option (if applicable).
-    pub fn min_length(mut self, min_length: CommandOptionChoiceValue) -> Self {
+    pub fn min_length(mut self, min_length: ChoiceValue) -> Self {
         self.min_length = Some(min_length);
         self
     }
 
     /// Sets the maximum length for the command option (if applicable).
-    pub fn max_length(mut self, max_length: CommandOptionChoiceValue) -> Self {
+    pub fn max_length(mut self, max_length: ChoiceValue) -> Self {
         self.max_length = Some(max_length);
         self
     }
@@ -225,23 +225,19 @@ impl CommandOptionBuilder {
         }
         if let Some(min_value) = &self.min_value {
             match min_value {
-                CommandOptionChoiceValue::String(_) => {
-                    return Err("`min_value` cannot be a string".into())
-                }
+                ChoiceValue::String(_) => return Err("`min_value` cannot be a string".into()),
                 _ => (),
             }
         }
         if let Some(value) = &self.max_value {
             match value {
-                CommandOptionChoiceValue::String(_) => {
-                    return Err("`max_value` cannot be a string".into())
-                }
+                ChoiceValue::String(_) => return Err("`max_value` cannot be a string".into()),
                 _ => (),
             }
         }
         if let Some(value) = &self.min_length {
             match value {
-                CommandOptionChoiceValue::Int(value) => {
+                ChoiceValue::Int(value) => {
                     if value < &0 {
                         return Err("`min_length` must be at least 0".into());
                     } else if value > &6000 {
@@ -253,7 +249,7 @@ impl CommandOptionBuilder {
         }
         if let Some(value) = &self.max_length {
             match value {
-                CommandOptionChoiceValue::Int(value) => {
+                ChoiceValue::Int(value) => {
                     if value < &1 {
                         return Err("`max_length` must be at least 1".into());
                     } else if value > &6000 {
