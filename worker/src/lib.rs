@@ -1,15 +1,12 @@
+use serde_discord::{interaction::Interaction, response::InteractionResponse};
 use worker::{event, Context, Env, Request, Response};
 
 mod commands;
-mod interaction;
 mod parse;
-mod response;
 mod verify;
 
 pub use commands::*;
-pub use interaction::*;
 pub use parse::*;
-pub use response::*;
 pub use verify::*;
 
 #[event(fetch)]

@@ -1663,6 +1663,7 @@ dependencies = [
  "hex",
  "rand",
  "serde",
+ "serde_discord",
  "serde_json",
  "serde_repr",
  "worker 0.4.1",
