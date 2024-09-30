@@ -13,4 +13,6 @@ serde_repr = "0.1.19"
 default = ["types"]
 register = ["types"]
 response = ["types"]
+interaction = ["types"]
+responding = ["types", "response", "interaction"]
 types = []
