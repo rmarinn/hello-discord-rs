@@ -11,6 +11,6 @@ serde_repr = "0.1.19"
 
 [features]
 default = ["types"]
-register = []
-response = []
+register = ["types"]
+response = ["types"]
 types = []
